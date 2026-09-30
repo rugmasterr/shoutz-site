@@ -133,6 +133,7 @@ h2 em{font-style:normal;color:var(--lime)}
 footer{padding:26px 0 44px;color:var(--muted);font-size:15px}
 footer .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
 footer p{max-width:70ch;margin:0}
+footer .links{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 
 @media (max-width:860px){
   .strip{grid-template-columns:1fr}
@@ -154,7 +155,7 @@ footer p{max-width:70ch;margin:0}
 <nav>
   <div class="nav">
     <a href="#top" aria-label="SHOUTZ home"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAJCAYAAABex15NAAABW0lEQVR4nM2UvWrCUBiGn1MTEugQULdsHTvoXhC79RIUpDfg5uJFdOnWG5CCXd3clIK7Co4OQrBDLGYonBDK6SAnPabxh0Kh3/TyfO+X854fIgBsx1P8sxI6VCBf9hq+20hZVmf9WXZoNluHer7bwAKYyhYhA67FkzANIQMFkMSRMPVCtZX2L1RbTWWLqvtMyIA8v+82lJ4D9tbRPQDdT+JIWABb5mkY81pNfkoncSS2zHNnkzgStuMpk5llO54aywpb5tyIVwFwAVB3ZwBMVE2NZeXH4ETV/uQN6kPQa+pQAJbeTd2dkcSR6IdXqheUuPc3rDYBAM3yUvTDqzSc5ufqY6wXlFhtAprl5d4zssyrsx1PrUMJ7I5/HV6mPc1/o89lZhYLoDMsfBvfJA+370Jrk+vqVj/oDAt0R0Vl+g/xvG9kWXdUTEM93n3uUub9x7I8q8+ZOdU75v8CFM/5uFpFEOMAAAAASUVORK5CYII=" alt="SHOUTZ"></a>
-    <ul><li><a href="#mint">Mint</a></li><li><a href="#crew">Crew</a></li><li><a href="#rules">Rules</a></li></ul>
+    <ul><li><a href="#mint">Mint</a></li><li><a href="#crew">Crew</a></li><li><a href="#rules">Rules</a></li><li><a href="https://x.com/SHOUTZSOL" target="_blank" rel="noopener">X</a></li></ul>
     <a class="btn os" href="#" aria-disabled="true">Marketplace soon</a>
   </div>
 </nav>
@@ -163,7 +164,7 @@ footer p{max-width:70ch;margin:0}
   <header class="hero">
     <h1 style="margin:0"><img class="px word" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAJCAYAAABex15NAAABW0lEQVR4nM2UvWrCUBiGn1MTEugQULdsHTvoXhC79RIUpDfg5uJFdOnWG5CCXd3clIK7Co4OQrBDLGYonBDK6SAnPabxh0Kh3/TyfO+X854fIgBsx1P8sxI6VCBf9hq+20hZVmf9WXZoNluHer7bwAKYyhYhA67FkzANIQMFkMSRMPVCtZX2L1RbTWWLqvtMyIA8v+82lJ4D9tbRPQDdT+JIWABb5mkY81pNfkoncSS2zHNnkzgStuMpk5llO54aywpb5tyIVwFwAVB3ZwBMVE2NZeXH4ETV/uQN6kPQa+pQAJbeTd2dkcSR6IdXqheUuPc3rDYBAM3yUvTDqzSc5ufqY6wXlFhtAprl5d4zssyrsx1PrUMJ7I5/HV6mPc1/o89lZhYLoDMsfBvfJA+370Jrk+vqVj/oDAt0R0Vl+g/xvG9kWXdUTEM93n3uUub9x7I8q8+ZOdU75v8CFM/5uFpFEOMAAAAASUVORK5CYII=" alt="SHOUTZ" width="820" height="220"></h1>
     <p class="sub">1,111 pixel loudmouths on Solana. <b>No mint button.</b> Shout your wallet address in a callout and one lands in your wallet.</p>
-    <div class="cta"><a class="btn" href="#mint">How to mint</a><a class="btn ghost os" href="#" aria-disabled="true">Marketplace soon</a></div>
+    <div class="cta"><a class="btn" href="#mint">How to mint</a><a class="btn ghost" href="https://x.com/SHOUTZSOL" target="_blank" rel="noopener">Follow on X</a><a class="btn ghost os" href="#" aria-disabled="true">Marketplace soon</a></div>
     <div class="stage" aria-hidden="true">
       <figure><span class="shout">!!!</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAABqUlEQVR4nGNgGAWjYBRQBzCSo0nMQP4/jP3qwkNGYuWoDsQM5P+f+zINjpEtR5bzm2aAIkcMIMnlYgby//Pm6GOIT0q5yMDAwMBgkSaIIXdi1nuiQ4iJFMcgg2rjjQwtDnuwym3MPM+wq+wWyWaykOsYTl5uODtvjj7DqVOPsMqRAogOGVxRRAhYpAkyEJt2iIpLYhyCHDLYADFpByOaSM0B1ASojpEV+7/jSDleDdtu7KC9Y/g15P6XLTNkcDHvYChaaEAzC/EBlAT8/9//AXMIAwOWNMPIyMAwMfkihkJychLFjvn/nz4WYwPwaPp44xFjR+T5AXEEDKCEzJfbjxknpTBhzdo7jpSj5KQcLi0U+QcyXCj8uic3KHMMAwP2ap9eZQ9dCz1sZiN7HsUxPKqy8GIflqteXXjISC0HwsxCbmqcmMXwH+YgspsQtACDyjF4EytyfKLX3Bi56c4DFD5ybkKvsXHZQVRugolPSmEguU2DremAyw6SW++kJmaa9hBIcQypDh/cCRgXIFRgkasWGRDVO8DdX0IUWMhqsfefMNWig9FowgUAEkjQrtURDiMAAAAASUVORK5CYII=" alt=""></figure>
       <figure><span class="shout">SEND IT</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAYAAACoPemuAAAB2UlEQVR4nO2Yv07CUBTGvxIHE0ZqHJxYIAUscTNsujn4BCgYDbq4GHkJB5+AiX+Drjq4OEqYJBACEQcSVxs32bAO2qa03LbnXmiI8iUk9LT3nF/Puff0tsBSS/1TSaIOZFXRWee0Tp/bP/dAAyhRLjCv6eVLAPgAucBkVdET5QIOohnUhg3P63v5EhkuNG8oAAinYq4lnwlYUCKByaqiJ6unXIHCm3FS1sgZ0790HEYzqAyfiANJlcQKzftvDAAhSHi5rJu2+HXW/M+yUyQ0x7q3DxhrI4y1kS97YGByRMZj7ca3nSKuUhp6/ngFNlaxfpTxZQ8M7OLtHgAQ2Un6slP0N/pYkOICkyThTYmnPOeYo1tLEqrDBsAJZ/Xn9mBnnpBVBQB062BZVfRwKsYFBACf3QHs/lhwUzM2DcrQ+e4eN9hVdzBxrHX6EguO3C6KJ2dkoGa79QNGGDMBZmTKcqwDzrnQbLewnd4iA9piucZxrMpi7hjv7Z75m5X2c1nHDbrFWdg+NnEH9lIasq+ku0qdVMq1dMKRrWmbRpG3KtOpX1H3+sLyAycCJZQ6r8DCpRERC060hAu7KpdgVJGflfOaU3Zx7fmtX3iMLzpudh6RlzOrY8+6k38DojIPMVTWmPEAAAAASUVORK5CYII=" alt=""></figure>
@@ -239,7 +240,7 @@ footer p{max-width:70ch;margin:0}
 </div></div>
 <footer class="wrap"><div class="row">
   <p>SHOUTZ is a collectible art project. Nothing here is financial advice, and buying the coin comes with the usual risk of losing what you put in. Never share your seed phrase; minting only ever needs your public address.</p>
-  <a class="os" href="#" aria-disabled="true">Official marketplace: coming soon</a>
+  <div class="links"><a href="https://x.com/SHOUTZSOL" target="_blank" rel="noopener">@SHOUTZSOL on X</a><a class="os" href="#" aria-disabled="true">Official marketplace: coming soon</a></div>
 </div></footer>
 
 <script>
