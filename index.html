@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SHOUTZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0d1a; --panel:rgba(10,13,26,.78); --line:#2a3566; --ink:#05070f;
+  --lime:#c6ff3d; --orange:#ff7a2f; --lav:#b8c0ff; --text:#eef1ff; --muted:#9aa4d0;
+  --display:"Jersey 10","Courier New",monospace;
+  --body:"Pixelify Sans",ui-rounded,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:18px;line-height:1.55;overflow-x:hidden}
+img.px,canvas{image-rendering:pixelated;image-rendering:crisp-edges}
+a{color:var(--lime)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+
+/* animated background */
+#bg{position:fixed;inset:-24px;width:calc(100% + 48px);height:calc(100% + 48px);z-index:-2;filter:blur(3px) saturate(1.1)}
+.veil{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 35%,rgba(10,13,26,.15),rgba(10,13,26,.75) 75%),
+             repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 2px,transparent 2px 4px)}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  background:rgba(10,13,26,.6);border-bottom:2px solid var(--line)}
+.nav{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:22px}
+.nav img{height:28px;width:auto}
+.nav ul{list-style:none;display:flex;gap:18px;margin:0 0 0 auto;padding:0}
+.nav ul a{color:var(--muted);text-decoration:none;font-family:var(--display);font-size:24px;line-height:1}
+.nav ul a:hover{color:var(--lime)}
+.btn{display:inline-block;font-family:var(--display);font-size:24px;line-height:1;text-decoration:none;padding:12px 18px 10px;
+  background:var(--lime);color:var(--ink);border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ink),inset -3px -3px 0 rgba(0,0,0,.18)}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.btn.ghost{background:transparent;color:var(--text);box-shadow:inset 0 0 0 2px var(--lav)}
+.btn[aria-disabled="true"]{background:#1d2548;color:var(--muted);box-shadow:4px 4px 0 var(--ink);cursor:default}
+.nav .btn{font-size:20px;padding:9px 12px 7px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* hero */
+.hero{min-height:calc(100svh - 60px);display:grid;align-content:center;justify-items:center;text-align:center;padding:40px 0 20px}
+.hero .word{width:min(760px,92vw);height:auto;filter:drop-shadow(8px 8px 0 #ff7a2f)}
+.hero p.sub{font-size:clamp(18px,2.2vw,22px);max-width:46ch;margin:14px auto 0;color:var(--text)}
+.hero p.sub b{color:var(--lime);font-weight:600}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.stage{display:flex;justify-content:center;align-items:flex-end;gap:clamp(4px,2vw,24px);margin-top:78px;
+  border-bottom:4px solid var(--lime);padding:0 12px;position:relative}
+.stage figure{margin:0;position:relative}
+.stage img{width:clamp(76px,13vw,150px);height:auto;display:block;animation:bob 1.2s steps(2) infinite}
+.stage figure:nth-child(2) img{animation-delay:.3s}.stage figure:nth-child(3) img{animation-delay:.6s}.stage figure:nth-child(4) img{animation-delay:.9s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.shout{position:absolute;left:50%;top:-18px;transform:translate(-50%,-100%);background:#f4f7ff;color:var(--orange);font-family:var(--display);
+  font-size:26px;line-height:1;padding:6px 10px 4px;box-shadow:0 0 0 3px var(--ink);opacity:0;animation:yell 6s steps(1) infinite;white-space:nowrap}
+.shout::after{content:"";position:absolute;left:14px;bottom:-9px;width:6px;height:6px;background:#f4f7ff;box-shadow:0 0 0 3px var(--ink)}
+.stage figure:nth-child(1) .shout{animation-delay:0s}.stage figure:nth-child(2) .shout{animation-delay:1.5s}
+.stage figure:nth-child(3) .shout{animation-delay:3s}.stage figure:nth-child(4) .shout{animation-delay:4.5s}
+@keyframes yell{0%{opacity:1}22%{opacity:0}}
+
+/* meter */
+.meter{margin:-8px auto 0;max-width:980px;background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border:2px solid var(--line);box-shadow:8px 8px 0 var(--ink);padding:22px 24px}
+.meter .top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.meter .num{font-family:var(--display);font-size:clamp(56px,10vw,104px);line-height:.8;color:var(--lime)}
+.meter .num small{font-size:.38em;color:var(--muted)}
+.meter .lab{font-family:var(--display);font-size:26px;color:var(--text);line-height:1}
+.meter .lab span{color:var(--orange)}
+#bars{display:grid;grid-template-columns:repeat(50,1fr);gap:3px;margin:18px 0 12px;height:34px}
+#bars i{background:#161d3c;display:block}
+#bars i.on{background:var(--c)}
+.status{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:15px}
+.dot{display:inline-block;width:10px;height:10px;margin-right:8px;background:var(--muted)}
+.live .dot{background:var(--lime);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.2}}
+
+/* sections */
+section{padding:110px 0 0}
+.kicker{font-family:var(--display);font-size:24px;color:var(--orange);margin:0;line-height:1}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(46px,7vw,80px);line-height:.9;margin:6px 0 26px;color:var(--text);text-shadow:4px 4px 0 var(--ink)}
+h2 em{font-style:normal;color:var(--lime)}
+
+/* comic strip */
+.strip{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:16px}
+.panel{background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:3px solid var(--ink);
+  box-shadow:0 0 0 2px var(--line),6px 6px 0 2px var(--ink);padding:20px;position:relative}
+.panel .n{position:absolute;top:-16px;left:-10px;background:var(--orange);color:var(--ink);font-family:var(--display);font-size:30px;line-height:1;padding:4px 10px 2px;box-shadow:3px 3px 0 var(--ink)}
+.panel h3{font-family:var(--display);font-weight:400;font-size:34px;line-height:1;margin:8px 0 8px;color:var(--lime)}
+.panel p{margin:0;color:var(--muted)}
+.ca{margin-top:14px;display:grid;gap:8px}
+.ca code{display:block;background:var(--ink);border:2px solid var(--line);padding:8px 10px;font-size:14px;word-break:break-all;color:var(--text)}
+.ca .btn{font-size:20px;padding:8px 12px 6px;justify-self:start}
+.plats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.plats span{font-size:14px;padding:2px 8px;border:2px solid var(--line);color:var(--text)}
+
+.chat{margin-top:14px;background:#05070f;border:2px solid var(--line)}
+.chat .bar{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:2px solid var(--line);font-size:14px;color:var(--muted)}
+.chat .bar i{width:8px;height:8px;background:var(--orange);display:inline-block}
+.msg{display:grid;grid-template-columns:40px 1fr;gap:10px;padding:12px 10px}
+.msg img{width:40px;height:40px;background:#1c2b5e}
+.msg b{font-weight:600;color:var(--text);font-size:15px}.msg b span{color:var(--muted);font-weight:400;margin-left:6px}
+.msg .addr{margin-top:4px;background:#f4f7ff;color:#05070f;padding:8px 10px;font-size:14px;word-break:break-all;box-shadow:3px 3px 0 var(--lime)}
+.msg.sys{border-top:2px dashed var(--line)}
+.msg.sys .ok{color:var(--lime);font-size:15px}
+
+/* crew */
+.crew{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:2px solid var(--line);padding:18px 14px 16px;text-align:center;position:relative;transition:transform .12s steps(2)}
+.card:hover{transform:translateY(-6px)}
+.card img{width:100%;max-width:160px;height:auto}
+.card h3{font-family:var(--display);font-weight:400;font-size:32px;line-height:1;margin:8px 0 2px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.card .shout{top:10px;animation:none;opacity:0}
+.card:hover .shout,.card:focus-within .shout{opacity:1}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;list-style:none;padding:0;margin:0}
+.rules li{background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-left:6px solid var(--orange);padding:16px 18px}
+.rules b{display:block;font-family:var(--display);font-weight:400;font-size:30px;line-height:1;color:var(--text);margin-bottom:4px}
+.rules span{color:var(--muted);font-size:16px}
+
+/* marquee + footer */
+.marquee{margin-top:120px;overflow:hidden;background:var(--lime);color:var(--ink);border-block:4px solid var(--ink)}
+.marquee div{display:flex;width:max-content;animation:scroll 22s linear infinite}
+.marquee span{font-family:var(--display);font-size:30px;line-height:1;padding:10px 0 8px;white-space:nowrap}
+@keyframes scroll{to{transform:translateX(-50%)}}
+footer{padding:26px 0 44px;color:var(--muted);font-size:15px}
+footer .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer p{max-width:70ch;margin:0}
+
+@media (max-width:860px){
+  .strip{grid-template-columns:1fr}
+  .crew{grid-template-columns:repeat(2,1fr)}
+  .nav ul{display:none}
+  .nav .btn{margin-left:auto}
+  section{padding-top:90px}
+}
+@media (prefers-reduced-motion:reduce){
+  .stage img,.shout,.marquee div,.live .dot{animation:none}
+  .card:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<canvas id="bg" width="160" height="90" aria-hidden="true"></canvas>
+<div class="veil"></div>
+
+<nav>
+  <div class="nav">
+    <a href="#top" aria-label="SHOUTZ home"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAJCAYAAABex15NAAABW0lEQVR4nM2UvWrCUBiGn1MTEugQULdsHTvoXhC79RIUpDfg5uJFdOnWG5CCXd3clIK7Co4OQrBDLGYonBDK6SAnPabxh0Kh3/TyfO+X854fIgBsx1P8sxI6VCBf9hq+20hZVmf9WXZoNluHer7bwAKYyhYhA67FkzANIQMFkMSRMPVCtZX2L1RbTWWLqvtMyIA8v+82lJ4D9tbRPQDdT+JIWABb5mkY81pNfkoncSS2zHNnkzgStuMpk5llO54aywpb5tyIVwFwAVB3ZwBMVE2NZeXH4ETV/uQN6kPQa+pQAJbeTd2dkcSR6IdXqheUuPc3rDYBAM3yUvTDqzSc5ufqY6wXlFhtAprl5d4zssyrsx1PrUMJ7I5/HV6mPc1/o89lZhYLoDMsfBvfJA+370Jrk+vqVj/oDAt0R0Vl+g/xvG9kWXdUTEM93n3uUub9x7I8q8+ZOdU75v8CFM/5uFpFEOMAAAAASUVORK5CYII=" alt="SHOUTZ"></a>
+    <ul><li><a href="#mint">Mint</a></li><li><a href="#crew">Crew</a></li><li><a href="#rules">Rules</a></li></ul>
+    <a class="btn os" href="#" aria-disabled="true">Marketplace soon</a>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+  <header class="hero">
+    <h1 style="margin:0"><img class="px word" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAJCAYAAABex15NAAABW0lEQVR4nM2UvWrCUBiGn1MTEugQULdsHTvoXhC79RIUpDfg5uJFdOnWG5CCXd3clIK7Co4OQrBDLGYonBDK6SAnPabxh0Kh3/TyfO+X854fIgBsx1P8sxI6VCBf9hq+20hZVmf9WXZoNluHer7bwAKYyhYhA67FkzANIQMFkMSRMPVCtZX2L1RbTWWLqvtMyIA8v+82lJ4D9tbRPQDdT+JIWABb5mkY81pNfkoncSS2zHNnkzgStuMpk5llO54aywpb5tyIVwFwAVB3ZwBMVE2NZeXH4ETV/uQN6kPQa+pQAJbeTd2dkcSR6IdXqheUuPc3rDYBAM3yUvTDqzSc5ufqY6wXlFhtAprl5d4zssyrsx1PrUMJ7I5/HV6mPc1/o89lZhYLoDMsfBvfJA+370Jrk+vqVj/oDAt0R0Vl+g/xvG9kWXdUTEM93n3uUub9x7I8q8+ZOdU75v8CFM/5uFpFEOMAAAAASUVORK5CYII=" alt="SHOUTZ" width="820" height="220"></h1>
+    <p class="sub">1,111 pixel loudmouths on Solana. <b>No mint button.</b> Shout your wallet address in a callout and one lands in your wallet.</p>
+    <div class="cta"><a class="btn" href="#mint">How to mint</a><a class="btn ghost os" href="#" aria-disabled="true">Marketplace soon</a></div>
+    <div class="stage" aria-hidden="true">
+      <figure><span class="shout">!!!</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAABqUlEQVR4nGNgGAWjYBRQBzCSo0nMQP4/jP3qwkNGYuWoDsQM5P+f+zINjpEtR5bzm2aAIkcMIMnlYgby//Pm6GOIT0q5yMDAwMBgkSaIIXdi1nuiQ4iJFMcgg2rjjQwtDnuwym3MPM+wq+wWyWaykOsYTl5uODtvjj7DqVOPsMqRAogOGVxRRAhYpAkyEJt2iIpLYhyCHDLYADFpByOaSM0B1ASojpEV+7/jSDleDdtu7KC9Y/g15P6XLTNkcDHvYChaaEAzC/EBlAT8/9//AXMIAwOWNMPIyMAwMfkihkJychLFjvn/nz4WYwPwaPp44xFjR+T5AXEEDKCEzJfbjxknpTBhzdo7jpSj5KQcLi0U+QcyXCj8uic3KHMMAwP2ap9eZQ9dCz1sZiN7HsUxPKqy8GIflqteXXjISC0HwsxCbmqcmMXwH+YgspsQtACDyjF4EytyfKLX3Bi56c4DFD5ybkKvsXHZQVRugolPSmEguU2DremAyw6SW++kJmaa9hBIcQypDh/cCRgXIFRgkasWGRDVO8DdX0IUWMhqsfefMNWig9FowgUAEkjQrtURDiMAAAAASUVORK5CYII=" alt=""></figure>
+      <figure><span class="shout">SEND IT</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAYAAACoPemuAAAB2UlEQVR4nO2Yv07CUBTGvxIHE0ZqHJxYIAUscTNsujn4BCgYDbq4GHkJB5+AiX+Drjq4OEqYJBACEQcSVxs32bAO2qa03LbnXmiI8iUk9LT3nF/Puff0tsBSS/1TSaIOZFXRWee0Tp/bP/dAAyhRLjCv6eVLAPgAucBkVdET5QIOohnUhg3P63v5EhkuNG8oAAinYq4lnwlYUCKByaqiJ6unXIHCm3FS1sgZ0790HEYzqAyfiANJlcQKzftvDAAhSHi5rJu2+HXW/M+yUyQ0x7q3DxhrI4y1kS97YGByRMZj7ca3nSKuUhp6/ngFNlaxfpTxZQ8M7OLtHgAQ2Un6slP0N/pYkOICkyThTYmnPOeYo1tLEqrDBsAJZ/Xn9mBnnpBVBQB062BZVfRwKsYFBACf3QHs/lhwUzM2DcrQ+e4eN9hVdzBxrHX6EguO3C6KJ2dkoGa79QNGGDMBZmTKcqwDzrnQbLewnd4iA9piucZxrMpi7hjv7Z75m5X2c1nHDbrFWdg+NnEH9lIasq+ku0qdVMq1dMKRrWmbRpG3KtOpX1H3+sLyAycCJZQ6r8DCpRERC060hAu7KpdgVJGflfOaU3Zx7fmtX3iMLzpudh6RlzOrY8+6k38DojIPMVTWmPEAAAAASUVORK5CYII=" alt=""></figure>
+      <figure><span class="shout">!!</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAB/0lEQVR4nO2WQUsCQRTH/5NWN/GQlSc72DUUPFh4ifw0QXuL/AjW0aBPY7dFRKLdD+AhT7sEggihdXA72Izu7MzscwPxsD8QZPbPvDf/mXnzgJSUlJSU3YZRhbl8JVCNTycuS6L7V0I8iN13AAD+5xzDjy+0rGYomKyzB2MAiOhM7FGT8T0H5RJQLq2+tTtdoZF1B/tqXVw8Y8a5fCVYLAL0Bm5onDvEebi7AWNMOMPhDsk6k1OxDvUGbsgVFY/PrwBA1pnQJkSxNymmubXW5fKVwO4vz8NwtBwrl4DjQtiGp5d3tKwmfM8RuvMzoHAU1XFaVlO7bVnzWlZc1aL7sR5kU52O2DO0bUgJqVftEHV0d8gJbRPlGZJvQe9tFPou1yGdTq5DcgzVwY44lMtXxP9GvYrhKL6+tDtdnBarsTpg9YzoUG1ZAIBRH8MkTCcum05cpqpHIqH19+gvKQDAZe1C1Bcd97fXAEDW8XiKuGGHfM+B7zkonhyKlWSyGTTqVW2QltVEJpsBAJKOOz+fzWD3ncj7F0poOFr+vn9WY3wCVbD1toKq42MBGOzBOHLwSZWa77cq2HoQqs6EEMkHzDSB7spuotkkXiyUTiBpt7BzlXrnEtqoydchN/lxOhPkfsj3oq87AJwWwzdKriscU41KlFBcFRYJGR5UCju3Zb9P7AfQVhO/1gAAAABJRU5ErkJggg==" alt=""></figure>
+      <figure><span class="shout">LFG</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAABcUlEQVR4nGNgGAWjYKQAMZmg/2IyQf8H3BHvPvz/b+2+gmLHsFDiiBtX1jKcvviDwcnJAib8/9WTdYx0cwiyI2CAUseQ7BBsjqCGY0hyCD5HUOoYoh2C7Ag1FQ4GNUUBhi27X6CoSYqRZ1BTFGCoaL5IsmOIcgh6SKgpCmBVhyxOasgQdAgx0YELkOIYvJLEOuLIiZd45fftO8Fw++oqBnyOwRkilIQEOiAmZLA6hJqOINYxGAL0qjfILYFpDnC6ChYyr56sY6Q0lJDNwBUSWAXFZILg8Qgz4MaVtShqkNMPrlwDyy3IDkA2GxlgJFZsCiktR2COgTkImx1M6I4g2TYyAbpdTMgSi5cuZVi8dClNHYTLHpSoQY9rapQn2MoPbGkK7pBXT9YxzpzMgDdlUwPgsodgXUNtR1DNMGIcR44HmAgroQ8YNA4hKs6wBTWu+CZFLUkOgeV7dBAbHY1hASlq0QFRbVZCLTBy1SKDQRM1APkPFVGekvajAAAAAElFTkSuQmCC" alt=""></figure>
+    </div>
+  </header>
+
+  <div class="meter" aria-live="polite">
+    <div class="top">
+      <div class="num"><span id="minted">0</span><small> / 1,111</small></div>
+      <div class="lab">volume: <span id="pct">0%</span></div>
+    </div>
+    <div id="bars" aria-hidden="true"></div>
+    <div class="status"><span id="state"><i class="dot"></i><span id="stateText">Tuning in…</span></span><span id="updated"></span></div>
+  </div>
+
+  <section id="mint">
+    <p class="kicker">How to mint</p>
+    <h2>Get loud in <em>3 moves</em></h2>
+    <div class="strip">
+      <div class="panel"><span class="n">1</span>
+        <h3>Buy $10+ of <span class="tkr">$SHOUTZ</span></h3>
+        <p>Grab at least $10 of the coin before you shout. No buy, no SHOUT.</p>
+        <div class="ca"><code id="ca">Contract address coming soon</code><button class="btn" type="button" id="copy">Copy CA</button></div>
+      </div>
+      <div class="panel"><span class="n">2</span>
+        <h3>Shout your address</h3>
+        <p>Post a callout or thesis on the coin with your Solana wallet address as the whole message. Nothing else.</p>
+        <div class="plats"><span>pump.fun</span><span>gmgn</span><span>FOMO</span><span>Axiom</span></div>
+        <div class="chat" aria-label="Example callout">
+          <div class="bar"><i></i>callout · <span class="tkr">$SHOUTZ</span></div>
+          <div class="msg"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAABqUlEQVR4nGNgGAWjYBRQBzCSo0nMQP4/jP3qwkNGYuWoDsQM5P+f+zINjpEtR5bzm2aAIkcMIMnlYgby//Pm6GOIT0q5yMDAwMBgkSaIIXdi1nuiQ4iJFMcgg2rjjQwtDnuwym3MPM+wq+wWyWaykOsYTl5uODtvjj7DqVOPsMqRAogOGVxRRAhYpAkyEJt2iIpLYhyCHDLYADFpByOaSM0B1ASojpEV+7/jSDleDdtu7KC9Y/g15P6XLTNkcDHvYChaaEAzC/EBlAT8/9//AXMIAwOWNMPIyMAwMfkihkJychLFjvn/nz4WYwPwaPp44xFjR+T5AXEEDKCEzJfbjxknpTBhzdo7jpSj5KQcLi0U+QcyXCj8uic3KHMMAwP2ap9eZQ9dCz1sZiN7HsUxPKqy8GIflqteXXjISC0HwsxCbmqcmMXwH+YgspsQtACDyjF4EytyfKLX3Bi56c4DFD5ybkKvsXHZQVRugolPSmEguU2DremAyw6SW++kJmaa9hBIcQypDh/cCRgXIFRgkasWGRDVO8DdX0IUWMhqsfefMNWig9FowgUAEkjQrtURDiMAAAAASUVORK5CYII=" alt=""><div><b>you<span>just now</span></b><div class="addr">SHoUTzMASi45ub7Qe4ZE36UT5G6cU4ud8Fhhe4deS4F3</div></div></div>
+          <div class="msg sys"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAYAAACoPemuAAAB2UlEQVR4nO2Yv07CUBTGvxIHE0ZqHJxYIAUscTNsujn4BCgYDbq4GHkJB5+AiX+Drjq4OEqYJBACEQcSVxs32bAO2qa03LbnXmiI8iUk9LT3nF/Puff0tsBSS/1TSaIOZFXRWee0Tp/bP/dAAyhRLjCv6eVLAPgAucBkVdET5QIOohnUhg3P63v5EhkuNG8oAAinYq4lnwlYUCKByaqiJ6unXIHCm3FS1sgZ0790HEYzqAyfiANJlcQKzftvDAAhSHi5rJu2+HXW/M+yUyQ0x7q3DxhrI4y1kS97YGByRMZj7ca3nSKuUhp6/ngFNlaxfpTxZQ8M7OLtHgAQ2Un6slP0N/pYkOICkyThTYmnPOeYo1tLEqrDBsAJZ/Xn9mBnnpBVBQB062BZVfRwKsYFBACf3QHs/lhwUzM2DcrQ+e4eN9hVdzBxrHX6EguO3C6KJ2dkoGa79QNGGDMBZmTKcqwDzrnQbLewnd4iA9piucZxrMpi7hjv7Z75m5X2c1nHDbrFWdg+NnEH9lIasq+ku0qdVMq1dMKRrWmbRpG3KtOpX1H3+sLyAycCJZQ6r8DCpRERC060hAu7KpdgVJGflfOaU3Zx7fmtX3iMLzpudh6RlzOrY8+6k38DojIPMVTWmPEAAAAASUVORK5CYII=" alt=""><div><b>SHOUTZ<span>a moment later</span></b><div class="ok">SHOUT minted to your wallet ✓</div></div></div>
+        </div>
+      </div>
+      <div class="panel"><span class="n">3</span>
+        <h3>Check your wallet</h3>
+        <p>We catch the callout and mint your SHOUT straight to that address on <span class="chain">Solana</span>. It shows up under <b style="color:var(--text)">Collectibles</b> in Phantom, or the NFT tab in whatever wallet you use.</p>
+        <p style="margin-top:10px">Not there after a few minutes? Check your wallet's <b style="color:var(--text)">spam or hidden</b> folder. Wallets sometimes tuck new collections away until you unhide them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="crew">
+    <p class="kicker">The crew</p>
+    <h2>Four ways to <em>make noise</em></h2>
+    <div class="crew">
+      <div class="card" tabindex="0"><span class="shout">SEND IT</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAYAAACoPemuAAAB2UlEQVR4nO2Yv07CUBTGvxIHE0ZqHJxYIAUscTNsujn4BCgYDbq4GHkJB5+AiX+Drjq4OEqYJBACEQcSVxs32bAO2qa03LbnXmiI8iUk9LT3nF/Puff0tsBSS/1TSaIOZFXRWee0Tp/bP/dAAyhRLjCv6eVLAPgAucBkVdET5QIOohnUhg3P63v5EhkuNG8oAAinYq4lnwlYUCKByaqiJ6unXIHCm3FS1sgZ0790HEYzqAyfiANJlcQKzftvDAAhSHi5rJu2+HXW/M+yUyQ0x7q3DxhrI4y1kS97YGByRMZj7ca3nSKuUhp6/ngFNlaxfpTxZQ8M7OLtHgAQ2Un6slP0N/pYkOICkyThTYmnPOeYo1tLEqrDBsAJZ/Xn9mBnnpBVBQB062BZVfRwKsYFBACf3QHs/lhwUzM2DcrQ+e4eN9hVdzBxrHX6EguO3C6KJ2dkoGa79QNGGDMBZmTKcqwDzrnQbLewnd4iA9piucZxrMpi7hjv7Z75m5X2c1nHDbrFWdg+NnEH9lIasq+ku0qdVMq1dMKRrWmbRpG3KtOpX1H3+sLyAycCJZQ6r8DCpRERC060hAu7KpdgVJGflfOaU3Zx7fmtX3iMLzpudh6RlzOrY8+6k38DojIPMVTWmPEAAAAASUVORK5CYII=" alt="Green and white pill character"><h3>Pump Pill</h3><p>Shouted on pump.fun</p></div>
+      <div class="card" tabindex="0"><span class="shout">!!!</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAABqUlEQVR4nGNgGAWjYBRQBzCSo0nMQP4/jP3qwkNGYuWoDsQM5P+f+zINjpEtR5bzm2aAIkcMIMnlYgby//Pm6GOIT0q5yMDAwMBgkSaIIXdi1nuiQ4iJFMcgg2rjjQwtDnuwym3MPM+wq+wWyWaykOsYTl5uODtvjj7DqVOPsMqRAogOGVxRRAhYpAkyEJt2iIpLYhyCHDLYADFpByOaSM0B1ASojpEV+7/jSDleDdtu7KC9Y/g15P6XLTNkcDHvYChaaEAzC/EBlAT8/9//AXMIAwOWNMPIyMAwMfkihkJychLFjvn/nz4WYwPwaPp44xFjR+T5AXEEDKCEzJfbjxknpTBhzdo7jpSj5KQcLi0U+QcyXCj8uic3KHMMAwP2ap9eZQ9dCz1sZiN7HsUxPKqy8GIflqteXXjISC0HwsxCbmqcmMXwH+YgspsQtACDyjF4EytyfKLX3Bi56c4DFD5ybkKvsXHZQVRugolPSmEguU2DremAyw6SW++kJmaa9hBIcQypDh/cCRgXIFRgkasWGRDVO8DdX0IUWMhqsfefMNWig9FowgUAEkjQrtURDiMAAAAASUVORK5CYII=" alt="Green croc character"><h3>GMGN Croc</h3><p>Shouted on gmgn</p></div>
+      <div class="card" tabindex="0"><span class="shout">SAW THAT</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAB/0lEQVR4nO2WQUsCQRTH/5NWN/GQlSc72DUUPFh4ifw0QXuL/AjW0aBPY7dFRKLdD+AhT7sEggihdXA72Izu7MzscwPxsD8QZPbPvDf/mXnzgJSUlJSU3YZRhbl8JVCNTycuS6L7V0I8iN13AAD+5xzDjy+0rGYomKyzB2MAiOhM7FGT8T0H5RJQLq2+tTtdoZF1B/tqXVw8Y8a5fCVYLAL0Bm5onDvEebi7AWNMOMPhDsk6k1OxDvUGbsgVFY/PrwBA1pnQJkSxNymmubXW5fKVwO4vz8NwtBwrl4DjQtiGp5d3tKwmfM8RuvMzoHAU1XFaVlO7bVnzWlZc1aL7sR5kU52O2DO0bUgJqVftEHV0d8gJbRPlGZJvQe9tFPou1yGdTq5DcgzVwY44lMtXxP9GvYrhKL6+tDtdnBarsTpg9YzoUG1ZAIBRH8MkTCcum05cpqpHIqH19+gvKQDAZe1C1Bcd97fXAEDW8XiKuGGHfM+B7zkonhyKlWSyGTTqVW2QltVEJpsBAJKOOz+fzWD3ncj7F0poOFr+vn9WY3wCVbD1toKq42MBGOzBOHLwSZWa77cq2HoQqs6EEMkHzDSB7spuotkkXiyUTiBpt7BzlXrnEtqoydchN/lxOhPkfsj3oq87AJwWwzdKriscU41KlFBcFRYJGR5UCju3Zb9P7AfQVhO/1gAAAABJRU5ErkJggg==" alt="Pair of lavender eyes character"><h3>FOMO Eyes</h3><p>Shouted on FOMO</p></div>
+      <div class="card" tabindex="0"><span class="shout">LFG</span><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAABcUlEQVR4nGNgGAWjYKQAMZmg/2IyQf8H3BHvPvz/b+2+gmLHsFDiiBtX1jKcvviDwcnJAib8/9WTdYx0cwiyI2CAUseQ7BBsjqCGY0hyCD5HUOoYoh2C7Ag1FQ4GNUUBhi27X6CoSYqRZ1BTFGCoaL5IsmOIcgh6SKgpCmBVhyxOasgQdAgx0YELkOIYvJLEOuLIiZd45fftO8Fw++oqBnyOwRkilIQEOiAmZLA6hJqOINYxGAL0qjfILYFpDnC6ChYyr56sY6Q0lJDNwBUSWAXFZILg8Qgz4MaVtShqkNMPrlwDyy3IDkA2GxlgJFZsCiktR2COgTkImx1M6I4g2TYyAbpdTMgSi5cuZVi8dClNHYTLHpSoQY9rapQn2MoPbGkK7pBXT9YxzpzMgDdlUwPgsodgXUNtR1DNMGIcR44HmAgroQ8YNA4hKs6wBTWu+CZFLUkOgeV7dBAbHY1hASlq0QFRbVZCLTBy1SKDQRM1APkPFVGekvajAAAAAElFTkSuQmCC" alt="Periwinkle triangle-head character"><h3>Axiom Avenger</h3><p>Shouted on Axiom</p></div>
+    </div>
+    <p style="color:var(--muted);max-width:62ch;margin-top:22px">Which one you get depends on where you shout. Every SHOUT is dressed from its own set of traits, so no two come out the same.</p>
+  </section>
+
+  <section id="rules">
+    <p class="kicker">House rules</p>
+    <h2>Keep it <em>clean</em></h2>
+    <ul class="rules">
+      <li><b>One per wallet</b><span>Each Solana address can only receive one SHOUT.</span></li>
+      <li><b>Buy first</b><span>At least $10 of the coin, bought before you call out.</span></li>
+      <li><b>Address only</b><span>The callout must be your wallet address and nothing else, or it won't be picked up.</span></li>
+      <li><b>Four platforms</b><span>Callouts count on pump.fun, gmgn, FOMO and Axiom only.</span></li>
+      <li><b>1,111 total</b><span>When the meter hits 100%, the mint is over.</span></li>
+    </ul>
+  </section>
+</main>
+
+<div class="marquee" aria-hidden="true"><div>
+  <span>SHOUT YOUR ADDRESS ★ ONE PER WALLET ★ BUY $10 FIRST ★ 1,111 ON SOLANA ★ PUMP.FUN ★ GMGN ★ FOMO ★ AXIOM ★&nbsp;</span>
+  <span>SHOUT YOUR ADDRESS ★ ONE PER WALLET ★ BUY $10 FIRST ★ 1,111 ON SOLANA ★ PUMP.FUN ★ GMGN ★ FOMO ★ AXIOM ★&nbsp;</span>
+</div></div>
+<footer class="wrap"><div class="row">
+  <p>SHOUTZ is a collectible art project. Nothing here is financial advice, and buying the coin comes with the usual risk of losing what you put in. Never share your seed phrase; minting only ever needs your public address.</p>
+  <a class="os" href="#" aria-disabled="true">Official marketplace: coming soon</a>
+</div></footer>
+
+<script>
+/* ===== EDIT THESE ===== */
+const CONFIG = {
+  supply: 1111,
+  ticker: "$SHOUTZ",
+  tokenCA: "",
+  chainName: "Solana",
+  countUrl: "/api/minted",   // returns {"minted": 123}; the included Vercel function counts it on-chain via Helius
+  marketUrl: "",             // Magic Eden / Tensor link once approved; buttons unlock when set
+  marketName: "Magic Eden",
+  refreshMs: 15000
+};
+
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.querySelectorAll('.tkr').forEach(e=>e.textContent=CONFIG.ticker);
+document.querySelectorAll('.chain').forEach(e=>e.textContent=CONFIG.chainName);
+document.querySelectorAll('.os').forEach(a=>{
+  if(CONFIG.marketUrl){a.href=CONFIG.marketUrl;a.target='_blank';a.rel='noopener';a.removeAttribute('aria-disabled');
+    a.textContent=a.closest('footer')?'Official collection on '+CONFIG.marketName:'View on '+CONFIG.marketName}
+  else a.addEventListener('click',e=>e.preventDefault());
+});
+const caEl=document.getElementById('ca'),copyBtn=document.getElementById('copy');
+if(CONFIG.tokenCA) caEl.textContent=CONFIG.tokenCA; else copyBtn.hidden=true;
+copyBtn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(CONFIG.tokenCA);copyBtn.textContent='Copied'}catch(e){copyBtn.textContent='Select it manually'}setTimeout(()=>copyBtn.textContent='Copy CA',1800)});
+
+/* volume meter */
+const SEG=50,bars=document.getElementById('bars');
+for(let i=0;i<SEG;i++){const b=document.createElement('i');const t=i/(SEG-1);
+  b.style.setProperty('--c',t<.6?'#c6ff3d':t<.85?'#ffd23d':'#ff7a2f');bars.appendChild(b)}
+const segs=[...bars.children],mEl=document.getElementById('minted'),pEl=document.getElementById('pct');
+let shown=0;
+function paint(v){const on=Math.round(v/CONFIG.supply*SEG);segs.forEach((s,i)=>s.classList.toggle('on',i<on||(v>0&&i===0)));
+  mEl.textContent=v.toLocaleString();pEl.textContent=Math.floor(v/CONFIG.supply*100)+'%'}
+function show(n){n=Math.max(0,Math.min(CONFIG.supply,n|0));
+  if(reduce||Math.abs(n-shown)<3){shown=n;paint(n);return}
+  const from=shown,t0=performance.now();(function step(t){const k=Math.min(1,(t-t0)/900);const v=Math.round(from+(n-from)*k);paint(v);if(k<1)requestAnimationFrame(step);else shown=n})(t0)}
+const st=document.getElementById('state'),stT=document.getElementById('stateText'),up=document.getElementById('updated');
+async function tick(){
+  if(!CONFIG.countUrl){stT.textContent='The meter goes live when the mint opens.';return false}
+  try{const r=await fetch(CONFIG.countUrl,{cache:'no-store'});const j=await r.json();const n=Number(j.minted);
+    if(Number.isNaN(n))throw 0;show(n);
+    const done=n>=CONFIG.supply;st.className=done?'':'live';stT.textContent=done?'Minted out. Every SHOUT has been heard.':'Mint is live';
+    up.textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+  catch(e){st.className='';stT.textContent='The meter goes live when the mint opens.'}
+  return true}
+paint(0);tick().then(ok=>{if(ok)setInterval(tick,CONFIG.refreshMs)});
+
+/* animated pixel background */
+const cv=document.getElementById('bg'),g=cv.getContext('2d'),W=160,H=90;
+const rnd=(a=>()=>(a=(a*1664525+1013904223)>>>0)/4294967296)(42);
+const stars=[...Array(70)].map(()=>({x:rnd()*W|0,y:rnd()*55|0,p:rnd()*6.28,c:['#c6ff3d','#b8c0ff','#ff7a2f','#ffffff'][rnd()*4|0]}));
+const bld=[];for(let x=0;x<W;){const w=4+(rnd()*6|0);bld.push({x,w,h:14+(rnd()*22|0)});x+=w+1}
+const wins=[];bld.forEach(b=>{for(let y=H-b.h+2;y<H-6;y+=3)for(let x=b.x+1;x<b.x+b.w-1;x+=2)if(rnd()<.45)wins.push({x,y,p:rnd()*100,c:rnd()<.7?'#ffd23d':'#6fe3ff'})});
+const bubbles=[...Array(9)].map(()=>({x:rnd()*W,y:H+rnd()*H,v:.08+rnd()*.12,w:9+(rnd()*5|0)}));
+function frame(t){
+  const s=t/1000;
+  const grd=g.createLinearGradient(0,0,0,H);grd.addColorStop(0,'#070a18');grd.addColorStop(.7,'#1a2456');grd.addColorStop(1,'#2b1f4f');
+  g.fillStyle=grd;g.fillRect(0,0,W,H);
+  stars.forEach(o=>{if(Math.sin(s*2+o.p)>-.2){g.fillStyle=o.c;g.fillRect(o.x,o.y,1,1)}});
+  // big moon
+  g.fillStyle='#ff7a2f';for(let y=-6;y<=6;y++)for(let x=-6;x<=6;x++)if(x*x+y*y<=36)g.fillRect(130+x,16+y,1,1);
+  g.fillStyle='#e0621f';[[128,14],[133,19],[131,12]].forEach(([x,y])=>g.fillRect(x,y,2,2));
+  // bubbles rising
+  bubbles.forEach(b=>{if(!reduce){b.y-=b.v;if(b.y<-10){b.y=H+5;b.x=rnd()*W}}
+    const x=b.x|0,y=b.y|0;g.fillStyle='#e8ecff';g.fillRect(x,y,b.w,6);g.fillRect(x+2,y+6,2,2);
+    g.fillStyle='#ff7a2f';for(let k=0;k<3&&3+k*3<b.w;k++){g.fillRect(x+2+k*3,y+1,1,3);g.fillRect(x+2+k*3,y+4+0,1,1)}});
+  // skyline
+  bld.forEach(b=>{g.fillStyle='#0c1230';g.fillRect(b.x,H-b.h,b.w,b.h)});
+  wins.forEach(w=>{if(reduce||Math.sin(s*.7+w.p)>-.6){g.fillStyle=w.c;g.fillRect(w.x,w.y,1,1)}});
+  // equalizer along the bottom
+  for(let x=0;x<W;x+=3){const h=reduce?2:2+Math.round((Math.sin(s*4+x*.35)+Math.sin(s*2.3+x*.11)+2)*2.2);
+    g.fillStyle=h>7?'#ff7a2f':'#c6ff3d';g.fillRect(x,H-h,2,h)}
+}
+let last=0;function loop(t){if(t-last>90){frame(t);last=t}requestAnimationFrame(loop)}
+if(reduce)frame(0);else requestAnimationFrame(loop);
+</script>
+</body>
+</html>
